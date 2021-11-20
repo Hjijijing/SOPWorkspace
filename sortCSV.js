@@ -1,20 +1,26 @@
-import createDataSet, { checkArray, compareArrays } from "./dataset.js";
+import createDataSet, {
+  checkArray,
+  compareArrays,
+  createReverseDataSet,
+} from "./dataset.js";
 import mergeSort from "./sortingalgos/mergesort.js";
 import insertionSort from "./sortingalgos/insertionsort.js";
 import fs from "fs";
+import process from "process";
 
 const maxIndex = 11;
-const testsPerIteration = 5;
+const testsPerIteration = 10;
 
-const mergeFileName = "merge2.csv";
-const insertionFileName = "insertion2.csv";
+const mergeFileName = "mergeworst.csv";
+const insertionFileName = "insertionworst.csv";
 
 const getNumberAmount = function (index) {
   return 100000 * index;
 };
 
 const getDatasets = function (numberAmount) {
-  const [datasetInsertion, comparison] = createDataSet(numberAmount);
+  //const [datasetInsertion, comparison] = createDataSet(numberAmount);
+  const [datasetInsertion, comparison] = createReverseDataSet(numberAmount);
   const datasetMerge = [...datasetInsertion];
   return [datasetInsertion, datasetMerge, comparison];
 };

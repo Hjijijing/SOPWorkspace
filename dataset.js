@@ -11,6 +11,15 @@ export function createUnshuffledDataSet(numberOfElements) {
   return result;
 }
 
+export function createReverseDataSet(numberofElements) {
+  const result = [];
+  for (let i = 0; i < numberofElements; i++) {
+    result.push(numberofElements - i - 1);
+  }
+  const comparison = createUnshuffledDataSet(numberofElements);
+  return [result, comparison];
+}
+
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
