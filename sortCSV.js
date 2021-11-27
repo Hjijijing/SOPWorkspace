@@ -2,25 +2,28 @@ import createDataSet, {
   checkArray,
   compareArrays,
   createReverseDataSet,
+  createUnshuffledDataSet,
 } from "./dataset.js";
 import mergeSort from "./sortingalgos/mergesort.js";
 import insertionSort from "./sortingalgos/insertionsort.js";
 import fs from "fs";
-import process from "process";
 
 const maxIndex = 11;
 const testsPerIteration = 10;
 
-const mergeFileName = "mergeworst.csv";
-const insertionFileName = "insertionworst.csv";
+const mergeFileName = "mergebest.csv";
+const insertionFileName = "insertionbest.csv";
 
 const getNumberAmount = function (index) {
-  return 100000 * index;
+  //return 100000 * index; //Used for worst and average
+  return 1000000 * index; //Used for best
 };
 
 const getDatasets = function (numberAmount) {
-  //const [datasetInsertion, comparison] = createDataSet(numberAmount);
-  const [datasetInsertion, comparison] = createReverseDataSet(numberAmount);
+  //const [datasetInsertion, comparison] = createDataSet(numberAmount); //Used for average/random
+  //const [datasetInsertion, comparison] = createReverseDataSet(numberAmount); //Used for worst case
+  const datasetInsertion = createUnshuffledDataSet(numberAmount); //Used for best case
+  const comparison = [...datasetInsertion]; //Used for best case
   const datasetMerge = [...datasetInsertion];
   return [datasetInsertion, datasetMerge, comparison];
 };
