@@ -12,7 +12,7 @@ for j = 2 to A.length
 MERGE(A,p,q,r)
 n1 = q - p + 1
 n2 = r - q
-
+lad L[1..n1+1] og R[1..n2+1] være nye lister
 for i = 1 to n1
     L[i] = A[p + i - 1]
 for j = 1 to n2

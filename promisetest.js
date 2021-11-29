@@ -1,4 +1,4 @@
-console.log("Before promise called");
+/*console.log("Before promise called");
 new Promise(function (resolve, reject) {
   setTimeout(function () {
     resolve();
@@ -7,4 +7,4 @@ new Promise(function (resolve, reject) {
   console.log("Promise resolved");
 });
 
-console.log("After promise called");
+console.log("After promise called");*/
