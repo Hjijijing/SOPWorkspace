@@ -11,12 +11,14 @@ import fs from "fs";
 const maxIndex = 11;
 const testsPerIteration = 10;
 
-const mergeFileName = "mergebest.csv";
-const insertionFileName = "insertionbest.csv";
+const mergeFileName = "mergebesthigh.csv";
+const insertionFileName = "insertionbesthigh2.csv";
 
 const getNumberAmount = function (index) {
   //return 100000 * index; //Used for worst and average
-  return 1000000 * index; //Used for best
+  //return 1000000 * index; //Used for best
+  //return 10000 * index; //Used for low
+  return 10000000 * index;
 };
 
 const getDatasets = function (numberAmount) {

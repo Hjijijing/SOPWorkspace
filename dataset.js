@@ -7,7 +7,10 @@ export default function createDataSet(numberOfElements) {
 }
 
 export function createUnshuffledDataSet(numberOfElements) {
-  const result = [...Array(numberOfElements).keys()];
+  let result = [];
+  for (let i = 0; i < numberOfElements; i++) {
+    result[i] = i;
+  }
   return result;
 }
 
