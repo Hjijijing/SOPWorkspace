@@ -117,3 +117,8 @@ function writeFiles(insertionTimes, mergeTimes) {
 
   fs.writeFileSync(mergeFileName, csvMerge);
 }
+
+let tidFør = performance.now();
+insertionSort(A);
+let tidEfter = performance.now();
+print(tidEfter - tidFør);
