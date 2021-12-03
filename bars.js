@@ -28,8 +28,8 @@ window.setup = () => {
 
   new Promise(async (resolve, reject) => {
     console.log("Beginning sort");
-    await insertionSortDraw(dataset, drawArray);
-    //await mergeSortDraw(dataset, 0, dataset.length - 1, drawArray);
+    //await insertionSortDraw(dataset, drawArray);
+    await mergeSortDraw(dataset, 0, dataset.length - 1, drawArray);
     resolve();
   }).then(() => {
     console.log("Sort done");
