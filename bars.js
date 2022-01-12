@@ -7,14 +7,18 @@ import { insertionSortDraw } from "./sortingalgos/insertionsort.js";
 import { mergeSortDraw } from "./sortingalgos/mergesort.js";
 
 let maxValue;
-let numberOfElements = 400;
-let dataset;
+let numberOfElements = 20;
+let mergeSortDataSet;
+let insertionSortDataSet;
 let comparison;
-const drawDelay = 0;
-let highlight = -1;
-let key = 0;
+const drawDelay = 100;
+let mergeHighlight = -1;
+let mergeKey = 0;
+let insertionHighlight = -1;
+let insertionKey = 0;
 let highlightColor = "#FF0000C8";
 let sortData;
+let overlay = false;
 
 window.setup = () => {
   createCanvas(innerWidth, innerHeight).position(0, 0);
@@ -22,28 +26,42 @@ window.setup = () => {
 
   maxValue = numberOfElements;
   //dataset = createDataSetRange(numberOfElements, 0, maxValue);
-  [dataset, comparison] = createDataSet(numberOfElements);
-  console.log(dataset);
-  drawArray(dataset);
+  [mergeSortDataSet, comparison] = createDataSet(numberOfElements);
+  insertionSortDataSet = [...mergeSortDataSet];
+  console.log(mergeSortDataSet);
+  drawArray(mergeSortDataSet);
 
-  new Promise(async (resolve, reject) => {
-    console.log("Beginning sort");
+  let p1 = new Promise(async (resolve, reject) => {
+    console.log("Beginning merge sort");
     //await insertionSortDraw(dataset, drawArray);
-    await mergeSortDraw(dataset, 0, dataset.length - 1, drawArray);
+    await mergeSortDraw(
+      mergeSortDataSet,
+      0,
+      mergeSortDataSet.length - 1,
+      drawArray
+    );
     resolve();
-  }).then(() => {
+  });
+  let p2 = new Promise(async (resolve, reject) => {
+    console.log("Beginning insertion sort");
+    //await insertionSortDraw(dataset, drawArray);
+    await insertionSortDraw(insertionSortDataSet, drawArray);
+    resolve();
+  });
+
+  Promise.all([p1, p2]).then(() => {
     console.log("Sort done");
     //const correct = checkArray(dataset);
     const correct = comparison
-      ? compareArrays(dataset, comparison)
-      : checkArray(dataset);
+      ? compareArrays(mergeSortDataSet, comparison)
+      : checkArray(mergeSortDataSet);
     console.log(`Result: ${correct}`);
     //console.log(dataset);
   });
 };
 
-function getColor(number, index) {
-  if (comparison && comparison[index] == dataset[index])
+function getColor(number, index, dataSet) {
+  if (comparison && comparison[index] == dataSet[index])
     return color(0, 255, 0);
   const ratio = (number / maxValue) * 45 + 55;
   return color(100, ratio, 255);
@@ -51,44 +69,91 @@ function getColor(number, index) {
 
 window.draw = () => {
   background("black");
-  noStroke();
 
   //Calculates width of one bar
-  const barWidth = width / dataset.length;
+  const barWidth = width / mergeSortDataSet.length;
 
-  for (let i = 0; i < dataset.length; i++) {
-    const color = getColor(dataset[i], i);
-    fill(color);
-    const value = dataset[i];
-    const barHeight = (value / maxValue) * height;
-    rect(i * barWidth, height, barWidth, -barHeight);
+  if (barWidth > 10) {
+    stroke("white");
+    strokeWeight(barWidth * 0.1);
+  } else noStroke();
+
+  //Draw mergeSort data
+  for (let i = 0; i < mergeSortDataSet.length; i++) {
+    const mergeColor = getColor(mergeSortDataSet[i], i, mergeSortDataSet);
+    fill(mergeColor);
+    const value = mergeSortDataSet[i];
+    const barHeightMerge = (value / maxValue) * (height / 2);
+    rect(i * barWidth, height / 2, barWidth, -barHeightMerge);
   }
 
-  //Highlight
+  //Draw insertion sort data
+  for (let i = 0; i < insertionSortDataSet.length; i++) {
+    //Draw InsertionSort data
+    const insertinoColor = getColor(
+      insertionSortDataSet[i],
+      i,
+      insertionSortDataSet
+    );
+    fill(insertinoColor);
+    const value = insertionSortDataSet[i];
+    const barHeightInsertion = (value / maxValue) * (height / 2);
+    rect(i * barWidth, height, barWidth, -barHeightInsertion);
+  }
+
+  //Merge Highlight
   fill(highlightColor);
-  const barHeight = (key / maxValue) * height;
-  rect(highlight * barWidth, height, barWidth, -barHeight);
+  const mergeBarHeight = (mergeKey / maxValue) * (height / 2);
+  rect(mergeHighlight * barWidth, height / 2, barWidth, -mergeBarHeight);
+
+  //Insertion Highlight
+  fill(highlightColor);
+  const insertionBarHeight = (insertionKey / maxValue) * (height / 2);
+  rect(insertionHighlight * barWidth, height, barWidth, -insertionBarHeight);
 
   //Merge sort bounds
   if (sortData && sortData.mergeSortBounds) {
     const leftBound = sortData.mergeSortBounds[0];
     const rightBound = sortData.mergeSortBounds[1];
-    const barHeight = height;
+    const barHeight = height / 2;
     fill("white");
-    rect(leftBound * barWidth, height, Math.max(1, barWidth * 0.3), -barHeight);
+    rect(
+      leftBound * barWidth,
+      height / 2,
+      Math.max(1, barWidth * 0.3),
+      -barHeight
+    );
     rect(
       (rightBound + (1 - 0.3)) * barWidth,
-      height,
+      height / 2,
       Math.max(1, barWidth * 0.3),
       -barHeight
     );
   }
+
+  if (overlay) drawOverlay();
 };
 
-async function drawArray({ highlightIndex, highlightKey, sortData: data }) {
-  highlight = highlightIndex;
-  key = highlightKey;
-  sortData = data;
+function drawOverlay() {
+  rect(0, height / 2, width, 2);
+  textAlign(LEFT, TOP);
+  textSize(16);
+  text("Merge Sort", 10, 0 + 10);
+  text("InsertionSort", 10, height / 2 + 10);
+}
+
+async function drawArray({
+  mergeHighlightIndex,
+  mergeHighlightKey,
+  insertionHighlightKey,
+  insertionHighlightIndex,
+  sortData: data,
+}) {
+  mergeHighlight = mergeHighlightIndex ?? mergeHighlight;
+  mergeKey = mergeHighlightKey ?? mergeKey;
+  insertionHighlight = insertionHighlightIndex ?? insertionHighlight;
+  insertionKey = insertionHighlightKey ?? insertionKey;
+  sortData = data ?? sortData;
   redraw();
 
   await new Promise((res, rej) => {

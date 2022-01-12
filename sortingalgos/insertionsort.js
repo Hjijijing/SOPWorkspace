@@ -18,7 +18,10 @@ export async function insertionSortDraw(array, drawFunction) {
     let i = j - 1;
     while (i >= 0 && array[i] > key) {
       array[i + 1] = array[i];
-      await drawFunction({ highlightIndex: i + 1, highlightKey: key });
+      await drawFunction({
+        insertionHighlightIndex: i + 1,
+        insertionHighlightKey: key,
+      });
       i -= 1;
     }
 

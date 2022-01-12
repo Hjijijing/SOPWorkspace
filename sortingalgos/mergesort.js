@@ -54,16 +54,16 @@ async function mergeDraw(A, p, q, r, drawArray) {
     if (L[i] <= R[j]) {
       A[k] = L[i];
       await drawArray({
-        highlightIndex: k,
-        highlightKey: A[k],
+        mergeHighlightIndex: k,
+        mergeHighlightKey: A[k],
         sortData: { mergeSortBounds: [p, r] },
       });
       i += 1;
     } else {
       A[k] = R[j];
       await drawArray({
-        highlightIndex: k,
-        highlightKey: A[k],
+        mergeHighlightIndex: k,
+        mergeHighlightKey: A[k],
         sortData: { mergeSortBounds: [p, r] },
       });
       j += 1;
