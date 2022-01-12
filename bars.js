@@ -1,5 +1,7 @@
 import createDataSet, {
   createDataSetRange,
+  createUnshuffledDataSetWithComparison,
+  createReverseDataSet,
   checkArray,
   compareArrays,
 } from "./dataset.js";
@@ -7,18 +9,18 @@ import { insertionSortDraw } from "./sortingalgos/insertionsort.js";
 import { mergeSortDraw } from "./sortingalgos/mergesort.js";
 
 let maxValue;
-let numberOfElements = 20;
+let numberOfElements = 200;
 let mergeSortDataSet;
 let insertionSortDataSet;
 let comparison;
-const drawDelay = 100;
+const drawDelay = 10;
 let mergeHighlight = -1;
 let mergeKey = 0;
 let insertionHighlight = -1;
 let insertionKey = 0;
 let highlightColor = "#FF0000C8";
 let sortData;
-let overlay = false;
+let overlay = true;
 
 window.setup = () => {
   createCanvas(innerWidth, innerHeight).position(0, 0);
@@ -26,7 +28,9 @@ window.setup = () => {
 
   maxValue = numberOfElements;
   //dataset = createDataSetRange(numberOfElements, 0, maxValue);
-  [mergeSortDataSet, comparison] = createDataSet(numberOfElements);
+  //[mergeSortDataSet, comparison] =  createUnshuffledDataSetWithComparison(numberOfElements); //Sorted order
+  //[mergeSortDataSet, comparison] = createReverseDataSet(numberOfElements); //Reverse order
+  [mergeSortDataSet, comparison] = createDataSet(numberOfElements); // Random order
   insertionSortDataSet = [...mergeSortDataSet];
   console.log(mergeSortDataSet);
   drawArray(mergeSortDataSet);
@@ -115,6 +119,7 @@ window.draw = () => {
   if (sortData && sortData.mergeSortBounds) {
     const leftBound = sortData.mergeSortBounds[0];
     const rightBound = sortData.mergeSortBounds[1];
+    const middle = sortData.mergeSortBounds[2];
     const barHeight = height / 2;
     fill("white");
     rect(
@@ -125,6 +130,13 @@ window.draw = () => {
     );
     rect(
       (rightBound + (1 - 0.3)) * barWidth,
+      height / 2,
+      Math.max(1, barWidth * 0.3),
+      -barHeight
+    );
+
+    rect(
+      middle * barWidth - 0.15 * barWidth,
       height / 2,
       Math.max(1, barWidth * 0.3),
       -barHeight

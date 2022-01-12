@@ -14,6 +14,12 @@ export function createUnshuffledDataSet(numberOfElements) {
   return result;
 }
 
+export function createUnshuffledDataSetWithComparison(numberOfElements) {
+  let result = createUnshuffledDataSet(numberOfElements);
+  let comparison = [...result];
+  return [result, comparison];
+}
+
 export function createReverseDataSet(numberofElements) {
   const result = [];
   for (let i = 0; i < numberofElements; i++) {
